@@ -150,6 +150,7 @@ public class LinkedList  implements  Iterable<Node> {
 		return new MyLinkedListIterator();
 	}
 
+	// An inner class implementing Iterator
 	public class MyLinkedListIterator implements Iterator<Node> {
 		private Node current;
 
