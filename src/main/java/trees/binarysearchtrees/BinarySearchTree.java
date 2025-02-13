@@ -126,6 +126,79 @@ class BinarySearchTree {
         return root;
     }
 
+    public void deleteIterative(int elem) {
+        if (root == null) { // nothing to delete
+            return;
+        }
+        BSTNode prev = null;
+        BSTNode current = root;
+
+        // Find current that contains the elem value
+        // Keep track of prev (parent)
+        while (current != null) {
+            if (elem == current.data)
+                break;
+            else if (elem > current.data) {
+                prev = current;
+                current = current.right;
+            }
+            else {
+                prev = current;
+                current = current.left;
+            }
+        }
+        //System.out.println(current.data);
+        if (current == null)
+            return; // element not in the tree, nothing to delete
+
+        // Removing a node with one child
+        // The root also needs to change if we delete the root
+        if (current.left == null) { // no left child
+            if (prev == null) {
+                // removing the root with one right child
+                root = root.right;
+                return;
+            }
+            // Removing a node without the left child, but it is not a root
+            if (prev.left == current)
+                prev.left = current.right; // since current has not left child
+            else { //current is the right child of prev
+                prev.right = current.right;
+            }
+        }
+        else if (current.right == null){ // removing a node that does not have the right child
+            if (prev == null) {
+                // removing the root with one left child
+                root = root.left;
+                return;
+            }
+            // Removing a node without the right child, but it is not a root
+            if (prev.left == current)
+                prev.left = current.left;
+            else { //current is the right child of prev
+                prev.right = current.left;
+            }
+        }
+        else { // has both children
+            // Find the smallest value in the right subtree
+            BSTNode rightRoot = current.right;
+            BSTNode prevBeforeRightRoot = current;
+            while (rightRoot.left != null ) {
+                prevBeforeRightRoot = rightRoot;
+                rightRoot = rightRoot.left;
+            }
+            System.out.println("smallest in the right subtree " + rightRoot.data);
+
+            int smallest = rightRoot.data;
+            current.data = smallest;
+            // Remove smallest
+            if (prevBeforeRightRoot.right == rightRoot) {
+                prevBeforeRightRoot.right  = rightRoot.right;
+            }
+            else
+                prevBeforeRightRoot.left = rightRoot.right;
+        }
+    }
 
     /** Print a binary tree (preorder) */
     public void printPreorder() {
@@ -153,7 +226,8 @@ class BinarySearchTree {
         System.out.println();
         System.out.println(tree.findIterative(12));
         System.out.println(tree.findIterative(13));
-        System.out.println();
+        tree.deleteIterative(12);
+        System.out.println(tree.findIterative(12));
         tree.printPreorder();
         System.out.println();
     }
